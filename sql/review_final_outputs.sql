@@ -12,3 +12,9 @@ SELECT issue, COUNT(*) AS total_issues
 FROM exceptions_report
 GROUP BY issue;
 
+sql/
+├── create_tables.sql           # Creates the required SQL tables
+├── data_load.sql               # Loads the input CSVs into SQL
+├── reconciliation_logic.sql    # Core logic for entitlement calculation and matching
+├── generate_outputs.sql        # Extracts final exception and release reports
++ ├── review_final_outputs.sql    # Optional queries to review clean and exception records
