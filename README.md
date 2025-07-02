@@ -1,6 +1,6 @@
 # Corporate Action Reconciliation – Fixed Income (SQL Automation Project)
 
-This project automates the reconciliation of fixed income corporate action events, specifically validating **cash entitlements** against actual payments received. It uses **pure SQL** to perform the full entitlement calculation, exception detection, and output generation — simulating real-world financial operations workflow.
+This project automates the reconciliation of fixed income corporate action events, specifically validating **cash entitlements** against actual payments received. It uses **pure SQL** to perform the full entitlement calculation, exception detection, and output generation simulating real-world financial operations workflow.
 
 ## Use Case
 
