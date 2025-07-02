@@ -1,98 +1,86 @@
-# Corporate Action Reconciliation & Cash Entitlement Automation (SQL Only)
+# Corporate Action Reconciliation – Fixed Income (SQL Automation Project)
 
-## Real-World Problem This Project Solves
+This project automates the reconciliation of fixed income corporate action events, specifically validating **cash entitlements** against actual payments received. It uses **pure SQL** to perform the full entitlement calculation, exception detection, and output generation — simulating real-world financial operations workflow.
 
-In investment operations, corporate actions like **coupon payments** and **bond redemptions** require accurate cash processing. However, in real environments:
+## Use Case
 
-- **Position data** may be incomplete or misaligned with records
-- **Actual cash received** may differ from what was expected due to rounding issues, breaks, or incorrect reference data
-- **Corporate action notifications** often contain inconsistent or incorrect event rates
+In capital markets operations, when coupon or redemption payments are due, discrepancies can arise between:
+- **What clients are entitled to (based on positions and event details)**
+- **What was actually paid by the issuer or agent**
 
-Operations teams manually reconcile these in Excel — cross-referencing entitlements, comparing calculations, and identifying breaks.  
-**This process is time-consuming, repetitive, error-prone, and lacks auditability.**
+This automation identifies those mismatches upfront using structured logic.
 
----
 
-## Project Overview
+##  Tech Stack
 
-This project uses **pure SQL** to simulate an automated reconciliation system. It replicates what financial institutions do daily using structured logic to compare:
+- SQL (tested on MySQL-compatible engines via DbGate)
+- CSV input/output for real-world simulation
+- Manual or GUI-based SQL execution (no Python dependencies)
 
-- What we **should** receive (based on event rates × eligible positions)
-- What we **actually** received (from agents, custodians, or internal systems)
 
----
+##  Project Structure
 
-## Real-World Impact of This Automation
-
-Flags breaks **before settlement**  
-Avoids **under- or over-payments** to clients or funds  
-Saves hours of manual Excel work per event  
-Provides an **auditable, repeatable** process for reconciling high-value transactions  
-Helps junior ops analysts understand key logic used in reconciling coupon/redemption events
-
----
-
-##  Key Concepts & SQL Techniques Used
-
-- **Data Loading via CSV**  
-  All input data (event notifications, positions, actual payments) is loaded into SQL tables.
-
-- **Joins & Matching Logic**  
-  Events are matched to positions using ISIN and event ID. This is the core reconciliation link.
-
-- **Entitlement Calculation**  
-  `Expected Cash = Quantity × Rate` — calculated in SQL using `CASE`, `ROUND()`, and arithmetic expressions.
-
-- **Break Identification**  
-  Mismatches between expected and actual cash are captured using `JOIN` and `WHERE` filters:
-  - Missing positions
-  - Missing payments
-  - Incorrect rates
-  - Cash differences
-
-- **Output Reporting**  
-  Clean records go to `release_instructions.csv`, while exceptions go to `exceptions_report.csv`.
+```
+├── input_data/               # CSVs with entitlements, events, and cash received
+├── output_data/              # CSVs for exception and release results
+├── sql/                      # Modular SQL scripts
+│   ├── create_tables.sql
+│   ├── data_load.sql
+│   ├── reconciliation_logic.sql
+│   ├── generate_outputs.sql
+│   └── review_final_outputs.sql
+└── README.md
+```
 
 ---
 
-##  File Structure
+##  Execution Steps
 
-<pre>
-sql/
-├── create_tables.sql           # Creates the required SQL tables
-├── data_load.sql               # Loads the input CSVs into SQL
-├── reconciliation_logic.sql    # Core logic for entitlement calculation and matching
-├── generate_outputs.sql        # Extracts final exception and release reports
+1. **Create Tables**  
+   Run `create_tables.sql` to set up the required tables.
 
-input_data/
-├── ca_notifications.csv        # Details of coupon/redemption events
-├── entitled_positions.csv      # Positions eligible for entitlements
-├── actual_cash.csv             # Actual cash received from agents
+2. **Load Data**  
+   Import the CSVs using the DbGate GUI (or similar SQL tool):  
+   - `ca_notifications.csv` → `ca_notifications`  
+   - `entitled_positions.csv` → `entitled_positions`  
+   - `actual_cash.csv` → `actual_cash`
 
-output_data/
-├── exceptions_report.csv       # Flagged mismatches and errors
-├── release_instructions.csv    # Validated, clean records
+3. **Run Reconciliation Logic**  
+   Execute `reconciliation_logic.sql` to calculate expected entitlements and match them with actuals.
 
-README.md                       # You are here
-LICENSE                         # Open license for public use
-.gitignore                      # Ignores local or temporary files
-</pre>
+4. **Generate Outputs**  
+   Run `generate_outputs.sql` to separate:
+   -  Exceptions → unmatched payments  
+   -  Clean records → eligible for release
+
+5. **Review (Optional)**  
+   Use `review_final_outputs.sql` for counts, filters, and exception summaries.
 
 ---
 
-##  How to Run This Project (Tested in DbGate)
+##  Output
 
-1. Create a new SQL database (e.g., `corp_action_recon_cash`)
-2. Run the scripts in order:
-```sql
--- Step 1: Create empty tables
-RUN sql/create_tables.sql;
+- `exceptions_report.csv` → All mismatches needing review  
+- `release_instructions.csv` → Clean payments ready for release
 
--- Step 2: Load sample CSVs (via DbGate import or INSERTs)
-RUN sql/data_load.sql;
+---
 
--- Step 3: Run reconciliation logic
-RUN sql/reconciliation_logic.sql;
+##  Tags
 
--- Step 4: Extract final reports
-RUN sql/generate_outputs.sql;
+`#fixed-income` `#reconciliation` `#cash-entitlement` `#sql-automation` `#corporate-actions` `#banking-operations` `#data-quality`
+
+---
+
+##  License
+
+MIT License
+
+---
+
+##  Author
+
+**Paras Rathod**  
+[GitHub Profile](https://github.com/paras1234-eng)  
+[LinkedIn](https://www.linkedin.com/in/paras-rathod-09429135)
+
+
